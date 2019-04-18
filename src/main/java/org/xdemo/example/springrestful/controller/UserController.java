@@ -32,9 +32,9 @@ import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 /**
- * @作者 Goofy
- * @邮件 252878950@qq.com
- * @日期 2014-4-2下午1:28:07
+ * @作者 贾姗姗
+ * @邮件 jiashanshan.uh@haier.com
+ * @日期 201904181121untack
  */
 @Controller
 @RequestMapping("/user")

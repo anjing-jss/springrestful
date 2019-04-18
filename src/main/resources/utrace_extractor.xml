@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<configuration>
+
+	<!-- 系统名称 -->
+	<pair key="sysName" value="UWS" />
+	<!-- 服务名称 -->
+	<pair key="serviceName" value="uds" />
+	<!-- 应用所在节点标识,全局唯一(一个应用可部署于多个节点) -->
+	<pair key="nodeIdentifier" value="9789f6b082214463ab70cb4d22158b2f" />
+	<!-- 是否开户链路跟踪,值为on/off(空值为on) -->
+	<pair key="switch" value="on" />
+	
+	<!-- 名单管理 -->
+	<pair key="uTraceUrlFilter" value="blacklist" />
+	<nlist>
+		<value>/v1/protected/devices/{0}</value>
+		<value>/uds/v1/protected/bindDevice</value>
+	</nlist>
+
+	<request>
+		<element key="reqHttp">
+			<element key="reqUrl" append="/" replace="true" notation="{0}" split="true">
+				<value format="/v1/users/{0}/devices/{0}" method="regex">,reqMAC</value>
+				<value format="/v1/protected/{0}/*" method="regex">reqMAC</value>
+				<filter>
+					<value>/uds/v1/protected/bindDevice</value>
+				</filter>
+			</element>
+			<element key="reqBody">
+				<value format="deviceId" method="json">reqMAC</value>
+				<value format="devices[id]" method="json">reqMAC</value>
+			</element>
+		</element>
+	</request>
+
+	<!-- 响应实例规则 -->
+	<response>
+		<element key="http">
+			<bean key="java.lang.String" method="json">
+				<value format="retCode">retCode</value>
+				<value format="retInfo">retInfo</value>
+			</bean>
+		</element>
+</response>
+
+<!-- 业务信息 -->
+	<business>
+		<value format="bind" method="POST">/commonapp/users/{0}/devices</value>
+		<value format="unBind" method="delete">/commonapp/users/{0}/devices/{0}</value>
+</business>
+
+<!-- 日志 -->
+	<logger>
+		<async>true</async>
+		<name>com.hshbic.utrace.reporter.UTraceLoggingReporter</name>
+		<level>info</level>
+		<fileNamePattern>
+/export/logs/oss/oss-${serviceName}-%d{yyyy-MM-dd}.%i.json.log
+</fileNamePattern>
+		<maxHistory>7</maxHistory>
+		<maxFileSize>100</maxFileSize>
+		<msgPattern>%msg%n</msgPattern>
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>100000</queueSize>
+</logger>
+</configuration>

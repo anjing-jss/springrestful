@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 查找最新的schemaLocation 访问 http://www.springframework.org/schema/ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd   
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://activemq.apache.org/schema/core
+        http://activemq.apache.org/schema/core/activemq-core-5.9.0.xsd">
+     
+     <!-- 配置扫描路径 -->
+     <context:component-scan base-package="org.xdemo.example">
+     	<!-- 只扫描Service，也可以添加Repostory，但是要把Controller排除在外，Controller由spring-mvc.xml去加载 -->
+     	<!-- <context:include-filter type="annotation" expression="org.springframework.stereotype.Service" /> -->
+     	<!-- <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository" /> -->
+     	<!-- <context:include-filter type="annotation" expression="org.springframework.stereotype.Component" /> -->
+     	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+     </context:component-scan>
+	 <!-- 如下是测试profile -->
+	 <bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="order" value="1" />
+		<property name="locations">
+			<list>
+				<value>classpath:system.properties</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="dataSource"
+		class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+
+		<property name="url" value="${batchcmd_jdbc_url}" />
+		<property name="username" value="${batchcmd_jdbc_username}" />
+		<property name="password" value="${batchcmd_jdbc_password}" />
+
+		<property name="name" value="${batchcmd_jdbc_name}" />
+
+
+		<property name="initialSize" value="${batchcmd_jdbc_initialSize}" />
+		<property name="minIdle" value="${batchcmd_jdbc_minIdle}" />
+		<property name="maxActive" value="${batchcmd_jdbc_maxActive}" />
+		<property name="maxWait" value="${batchcmd_jdbc_maxWait}" />
+
+		<property name="useUnfairLock" value="true" />
+		<property name="validationQuery" value="select 1" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="testWhileIdle" value="true" />
+
+		<property name="timeBetweenEvictionRunsMillis" value="120000" />
+		<property name="minEvictableIdleTimeMillis" value="600000" />
+	</bean>
+</beans>  
